@@ -1,19 +1,19 @@
 import json
 import os
-from flask import Flask, request, jsonify
+from flask import Flask, request, jsonify, send_from_directory
 from flask_cors import CORS
 import uuid
 import logging
 
 app = Flask(__name__)
-# Configure CORS for local testing (update with Railway URL later)
-CORS(app, resources={r"/*": {"origins": ["http://127.0.0.1:5500", "http://localhost:5500", "http://localhost:8000"]}})
+# Configure CORS for local testing and Render
+CORS(app, resources={r"/*": {"origins": ["http://127.0.0.1:5500", "http://localhost:5500", "http://localhost:8000", "https://*.onrender.com"]}})
 
 # Set up logging
 logging.basicConfig(level=logging.DEBUG)
 logger = logging.getLogger(__name__)
 
-# File path for JSON storage
+# File path for JSON storage (updated for Render disk)
 DATA_FILE = 'data.json'
 
 # Initialize JSON file if it doesn't exist or is empty/invalid
@@ -123,6 +123,11 @@ def fetch_all():
     except Exception as e:
         logger.error(f"Error in fetch_all: {e}")
         return jsonify({'error': 'Internal server error'}), 500
+
+# Endpoint to serve Admin.html
+@app.route('/admin')
+def serve_admin():
+    return send_from_directory('static', 'Admin.html')
 
 # Test endpoint to verify server
 @app.route('/', methods=['GET'])
