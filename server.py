@@ -5,11 +5,18 @@ import logging
 from fastapi import FastAPI, Request
 from fastapi.responses import JSONResponse, FileResponse
 from fastapi.middleware.cors import CORSMiddleware
+from fastapi.staticfiles import StaticFiles
+from fastapi.responses import FileResponse
 
-
-# Setup app
 app = FastAPI()
 
+# Mount static folder
+app.mount("/static", StaticFiles(directory="static"), name="static")
+
+# Route to open Admin.html directly
+@app.get("/admin")
+def get_admin():
+    return FileResponse("static/Admin.html")
 # Configure CORS
 origins = [
     "http://127.0.0.1:5500",
@@ -148,6 +155,3 @@ async def fetch_all():
         return JSONResponse({"error": "Internal server error"}, status_code=500)
 
 
-@app.get("/admin")
-async def serve_admin():
-    return FileResponse("static/Admin.html")
