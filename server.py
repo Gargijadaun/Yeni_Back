@@ -24,13 +24,15 @@ origins = [
     "http://localhost:8000",
     "https://yeniback-production.up.railway.app"
 ]
+
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["*"],  # or ["http://127.0.0.1:8000", "http://localhost:8000"]
+    allow_origins=origins,   # ✅ Use explicit list, not "*"
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
 )
+
 # Logging
 logging.basicConfig(level=logging.DEBUG)
 logger = logging.getLogger(__name__)
